@@ -1,9 +1,8 @@
-import React, { useEffect } from 'react';
-import { Card, Title, Table, TableHead, TableRow, TableHeaderCell, TableBody, TableCell, Button } from '@tremor/react';
+import React, { useEffect, useState } from 'react';
+import { Card, Title, Table, TableHead, TableRow, TableHeaderCell, TableBody, TableCell, Button, TextInput, Select, SelectItem } from '@tremor/react';
 import { useDispatch, useSelector } from 'react-redux';
-import { onActiveData, setLoading } from '../../store/admin/saleFuelSlice';
+import { onActiveData, onResetData, setLoading } from '../../store/admin/saleFuelSlice';
 import { startDeletingSaleFuel, startLoadingSaleFuels } from '../../store/admin/thunks/saleFuelThunk';
-import { onOpenModalSaleFuel } from '../../store/ui/uiSlice';
 import { useUiStore } from '../../hooks/useUiStore';
 import { convertDBDate } from '../../helpers/convertDBDate';
 import { startLoadingFuelPrices } from '../../store/admin/thunks/fuelPriceThunk';
@@ -12,15 +11,25 @@ import { startLoadingFuelTypes } from '../../store/admin/thunks/fuelTypeThunk';
 const SaleFuelComponent = () => {
   const dispatch = useDispatch();
   const { data } = useSelector(state => state.saleFuel);
-  const { data:measureFuelList } = useSelector(state=> state.measureFuel)
-  const { data:fuelPricesList } = useSelector(state => state.fuelPrice);
-  const { data:fuelTypeList } = useSelector(state=> state.fuelType);
+  const { data: fuelPricesList } = useSelector(state => state.fuelPrice);
+  const { data: fuelTypeList } = useSelector(state => state.fuelType);
+
+  const [filters, setFilters] = useState({
+    branch: '',
+    pump: '',
+    fuelPrice: '',
+    side: ''
+  });
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
 
   const handleEdit = (id) => {
     const itemToEdit = data.find(item => item.id === id);
-    dispatch(onActiveData(itemToEdit));
+    const time = convertDBDate(itemToEdit.time);
+    dispatch(onActiveData({...itemToEdit, time}));
     dispatch(setLoading());
-    dispatch(onOpenModalSaleFuel(true));
+    openModalSaleFuel(true);
   };
 
   const handleDelete = (id) => {
@@ -42,6 +51,29 @@ const SaleFuelComponent = () => {
     openModalSaleFuel(true);
   };
 
+  const handleFilterChange = (e) => {
+    setFilters({
+      ...filters,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const filteredData = data.filter(item => {
+    return (
+      (!filters.branch || item.branch.toLowerCase().includes(filters.branch.toLowerCase())) &&
+      (!filters.pump || item.pump.toLowerCase().includes(filters.pump.toLowerCase())) &&
+      (!filters.fuelPrice || item.price.toString().includes(filters.fuelPrice)) &&
+      (!filters.side || item.side.toLowerCase().includes(filters.side.toLowerCase()))
+    );
+  });
+
+  const paginatedData = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
+
   useEffect(() => {
     dispatch(startLoadingSaleFuels());
     dispatch(startLoadingFuelPrices());
@@ -49,40 +81,91 @@ const SaleFuelComponent = () => {
 
   useEffect(() => {
     dispatch(startLoadingFuelTypes());
-  }, [])
-  
+    dispatch(onResetData());
+  }, []);
 
   return (
     <div className="container mx-auto max-w-[80%]">
       <Card className='mt-6'>
         <Title>Lista de Ventas de Combustible</Title>
+        
+        <div className="flex gap-4 mb-4">
+          <TextInput
+            placeholder="Filtrar por Sucursal"
+            name="branch"
+            value={filters.branch}
+            onChange={handleFilterChange}
+          />
+          <TextInput
+            placeholder="Filtrar por Bomba"
+            name="pump"
+            value={filters.pump}
+            onChange={handleFilterChange}
+          />
+          <TextInput
+            placeholder="Filtrar por Precio de Combustible"
+            name="fuelPrice"
+            value={filters.fuelPrice}
+            onChange={handleFilterChange}
+          />
+          <TextInput
+            placeholder="Filtrar por Lado"
+            name="side"
+            value={filters.side}
+            onChange={handleFilterChange}
+          />
+        </div>
+
         <Table>
           <TableHead>
             <TableRow>
-              <TableHeaderCell>Precio del Combustible</TableHeaderCell>
+              <TableHeaderCell>Sucursal</TableHeaderCell>
+              <TableHeaderCell>Bomba</TableHeaderCell>
+              <TableHeaderCell>Precio</TableHeaderCell>
               <TableHeaderCell>Hora</TableHeaderCell>
               <TableHeaderCell>Cantidad</TableHeaderCell>
               <TableHeaderCell>Medida</TableHeaderCell>
               <TableHeaderCell>Tipo</TableHeaderCell>
+              <TableHeaderCell>Lado</TableHeaderCell>
               <TableHeaderCell>Acciones</TableHeaderCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.map(item => (
+            {paginatedData.map(item => (
               <TableRow key={item.id}>
-                <TableCell>{ fuelPricesList.find( fuelPrice => fuelPrice.id === item.id_fuel_price )?.price}</TableCell>
+                <TableCell>{item.branch}</TableCell>
+                <TableCell>{item.pump}</TableCell>
+                <TableCell>{item.price}</TableCell>
                 <TableCell>{convertDBDate(item.time)}</TableCell>
                 <TableCell>{item.quantity}</TableCell>
-                <TableCell>{ measureFuelList.find( measure => measure.id === item.id_measure )?.name }</TableCell>
-                <TableCell>{ fuelTypeList.find( fuelType => fuelType.id === fuelPricesList.find( fuelPrice => fuelPrice.id === item.id_fuel_price )?.id_fuel_type)?.name }</TableCell>
+                <TableCell>{item.measure}</TableCell>
+                <TableCell>{fuelTypeList.find(fuelType => fuelType.id === fuelPricesList.find(fuelPrice => fuelPrice.id === item.id_fuel_price)?.id_fuel_type)?.name}</TableCell>
+                <TableCell>{item.side}</TableCell>
                 <TableCell>
-                  <Button onClick={() => handleEdit(item.id)}>Editar</Button>
-                  <Button onClick={() => handleDelete(item.id)} color="red">Eliminar</Button>
+                  <Button disabled={item.closing === 1} onClick={() => handleEdit(item.id)}>Editar</Button>
+                  <Button disabled={item.closing === 1} onClick={() => handleDelete(item.id)} color="red">Eliminar</Button>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
+
+        <div className="flex justify-between mt-4">
+          <Button 
+            disabled={currentPage === 1}
+            onClick={() => handlePageChange(currentPage - 1)}
+          >
+            Anterior
+          </Button>
+          <span>Página {currentPage} de {totalPages}</span>
+          <Button 
+            disabled={currentPage === totalPages}
+            onClick={() => handlePageChange(currentPage + 1)}
+          >
+            Siguiente
+          </Button>
+        </div>
+
         <br />
         <button 
           className="btn btn-primary fab"

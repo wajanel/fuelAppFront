@@ -1,7 +1,7 @@
 // store/thunks/fuelPumpThunk.js
 import Swal from "sweetalert2";
 import { backendApi } from "../../../api/backendApi";
-import { closeLoading, onActiveData, onAddNewData, onDeleteData, onLoadingData, onUpdateData, setLoading } from "../fuelPumpSlice";
+import { closeLoading, onActiveData, onAddNewData, onDeleteData, onLoadingData, onResetData, onUpdateData, setLoading } from "../fuelPumpSlice";
 
 export const startLoadingFuelPumps = () => {
   return async (dispatch) => {
@@ -30,8 +30,8 @@ export const startSavingFuelPump = (fuelPump) => {
       const result = await backendApi.post('/fuel-pump', fuelPump);
       const { ok, msg, } = result.data;
       if (ok) {
-        dispatch(onAddNewData(fuelPump));
-        Swal.fire('Éxito', msg || 'La bomba de combustible se ha registrado', 'success');
+        dispatch(onResetData())
+        Swal.fire('Éxito', msg || 'Cambio realizado exitosamente', 'success');
       } else {
         Swal.fire('Error', msg || 'Error al registrar la bomba de combustible', 'error');
       }

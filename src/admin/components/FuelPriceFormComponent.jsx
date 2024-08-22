@@ -1,4 +1,3 @@
-// components/FuelPriceFormComponent.js
 import React, { useState, useEffect } from 'react';
 import { Card, Title, TextInput, Select, Button, SelectItem } from '@tremor/react';
 import Modal from 'react-modal';
@@ -7,27 +6,41 @@ import { useDispatch, useSelector } from 'react-redux';
 import { startSavingFuelPrice, startUpdatingFuelPrice } from '../../store/admin/thunks/fuelPriceThunk';
 import { startLoadingPumps } from '../../store/admin/thunks/pumpThunk';
 import { startLoadingFuelTypes } from '../../store/admin/thunks/fuelTypeThunk';
+import { startLoadingFuelPumps } from '../../store/admin/thunks/fuelPumpThunk';
 import { convertDBDate } from '../../helpers/convertDBDate';
+import { startLoadingBranches } from '../../store/admin/thunks/branchThunk';
 
 const FuelPriceFormComponent = () => {
   const { isOpenModalFuelPrice, closeModalFuelPrice } = useUiStore();
   const { activeData } = useSelector(state => state.fuelPrice);
   const { data: pumps } = useSelector(state => state.pump);
+  const { data: branches} = useSelector(state => state.branch);
   const { data: fuelTypes } = useSelector(state => state.fuelType);
+  const { data: fuelPumpsList } = useSelector(state => state.fuelPump);
   const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
     date: '',
     price: '',
     id_pump: '',
-    id_fuel_type: ''
+    id_fuel_type: '',
+    fuel_pump_key: ''
   });
 
+  const getFuelPumpKey = (fuelPump) => `${fuelPump.id_pump}-${fuelPump.id_fuel_type}`;
+
   const handleSave = () => {
+    const [id_pump, id_fuel_type] = formData.fuel_pump_key.split('-');
+    const payload = {
+      ...formData,
+      id_pump,
+      id_fuel_type
+    };
+
     if (formData.id) {
-      dispatch(startUpdatingFuelPrice(formData));
+      dispatch(startUpdatingFuelPrice(payload));
     } else {
-      dispatch(startSavingFuelPrice(formData));
+      dispatch(startSavingFuelPrice(payload));
     }
 
     closeModalFuelPrice();
@@ -35,14 +48,17 @@ const FuelPriceFormComponent = () => {
 
   useEffect(() => {
     if (activeData) {
-      setFormData(activeData);
+      const fuel_pump_key = getFuelPumpKey(activeData);
+      setFormData({ ...activeData, fuel_pump_key });
     }
   }, [activeData]);
 
   useEffect(() => {
     dispatch(startLoadingPumps());
     dispatch(startLoadingFuelTypes());
-  }, [dispatch]);
+    dispatch(startLoadingFuelPumps());
+    dispatch(startLoadingBranches());
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -53,10 +69,16 @@ const FuelPriceFormComponent = () => {
   };
 
   const handleSelectChange = (name, value) => {
-    console.log({name, value});
+    console.log({fuel_pump_key:formData.fuel_pump_key});
+    
     setFormData({ ...formData, [name]: value });
   };
-   
+
+  const filteredFuelPumps = fuelPumpsList.filter(fuelPump => 
+    fuelPump.id_pump === formData.id_pump && 
+    fuelPump.id_fuel_type === formData.id_fuel_type
+  );
+
   const customStyles = {
     content: {
       top: '50%',
@@ -88,6 +110,7 @@ const FuelPriceFormComponent = () => {
             onChange={handleChange}
             placeholder="Fecha"
             type="datetime-local"
+            disabled
           />
 
           <TextInput
@@ -97,6 +120,7 @@ const FuelPriceFormComponent = () => {
             placeholder="Precio"
             type="number"
             step="0.0001"
+            required
           />
 
           <Select
@@ -105,9 +129,13 @@ const FuelPriceFormComponent = () => {
             onChange={e => handleSelectChange('id_pump', e)}
           >
             <SelectItem value="">Seleccione una bomba</SelectItem>
-            {pumps.map(pump => (
-              <SelectItem key={pump.id} value={pump.id}>{pump.name}</SelectItem>
-            ))}
+            {pumps.map(pump => {
+              const branch = branches.find( b => b.id === pump.id_branch);
+              return (
+              <SelectItem key={pump.id} value={pump.id}>{pump.name +' - '+branch?.name}</SelectItem>
+            )}
+            )
+            }
           </Select>
 
           <Select
@@ -121,7 +149,27 @@ const FuelPriceFormComponent = () => {
             ))}
           </Select>
 
-          <Button type="submit" className="mt-4">
+          <Select
+            name="fuel_pump_key"
+            value={formData.fuel_pump_key}
+            onChange={e => handleSelectChange('fuel_pump_key', e)}
+            disabled={!formData.id_pump || !formData.id_fuel_type}
+          >
+            <SelectItem value="">Seleccione una bomba de combustible</SelectItem>
+            {filteredFuelPumps.map(fuelPump => {
+              const fuelPumpKey = getFuelPumpKey(fuelPump);
+              return (
+                <SelectItem 
+                  key={fuelPumpKey} 
+                  value={fuelPumpKey}
+                >
+                  {`${fuelPump.side} - ${pumps.find(pump => pump.id === fuelPump.id_pump)?.name} (${fuelTypes.find(fuelType => fuelType.id === fuelPump.id_fuel_type)?.name})`}
+                </SelectItem>
+              );
+            })}
+          </Select>
+
+          <Button disabled={(formData.fuel_pump_key==='-' || formData.fuel_pump_key==='')} type="submit" className="mt-4">
             {formData.id ? 'Actualizar' : 'Guardar'}
           </Button>
           <Button type="button" className="mt-4 ml-2" color="red" onClick={closeModalFuelPrice}>

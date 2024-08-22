@@ -25,10 +25,10 @@ export const startSavingIncome = (income) => {
         try {
             console.log('start saving income');
             const result = await backendApi.post('/income', income);
-            const { ok, msg } = result.data;
+            const { ok, msg, id } = result.data;
             if (ok) {
                 console.log('se agrega el income obtenido');
-                dispatch(onAddNewData(income));
+                dispatch(onAddNewData({id, ...income}));
                 Swal.fire('Creación de ingreso', msg || 'Creación exitosa', 'success');
             } else {
                 Swal.fire('Creación de ingreso', msg || 'Error en la creación', 'error');

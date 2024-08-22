@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { startSavingIncome, startUpdatingIncome } from '../../store/admin/thunks/incomeThunk';
 import { startLoadingBranches } from '../../store/admin/thunks/branchThunk';
 import { startLoadingIncomeTypes } from '../../store/admin/thunks/incomeTypeThunks';
+import { convertDBDate } from '../../helpers/convertDBDate';
 
 const IncomeFormComponent = () => {
   const { isOpenModalIncome, closeModalIncome } = useUiStore();
@@ -19,7 +20,8 @@ const IncomeFormComponent = () => {
     id_income_type: '',
     id_user: '',
     total: '',
-    description: ''
+    description: '',
+    date_process: ''
   });
 
   const handleSave = () => {
@@ -28,14 +30,17 @@ const IncomeFormComponent = () => {
       dispatch(startUpdatingIncome(formData));
     } else {
       console.log('nuevo income');
-      dispatch(startSavingIncome({ ...formData, id_user: 1 }));
+      dispatch(startSavingIncome(formData));
     }
     closeModalIncome();
   };
 
   useEffect(() => {
     if (activeData) {
-      setFormData(activeData);
+      setFormData({
+        ...activeData,
+        date_process: convertDBDate(activeData.date_process)
+      });
     }
   }, [activeData]);
 
@@ -91,6 +96,7 @@ const IncomeFormComponent = () => {
               name="id_branch"
               value={formData.id_branch}
               onChange={(e) => handleSelectChange('id_branch', e)}
+              required
             >
               <SelectItem value="">Seleccione una sucursal</SelectItem>
               {branches.map((branch) => (
@@ -106,6 +112,7 @@ const IncomeFormComponent = () => {
               name="id_income_type"
               value={formData.id_income_type}
               onChange={(e) => handleSelectChange('id_income_type', e)}
+              required
             >
               <SelectItem value="">Seleccione un tipo de ingreso</SelectItem>
               {incomeTypes.map((type) => (
@@ -132,6 +139,17 @@ const IncomeFormComponent = () => {
               value={formData.description || ''}
               onChange={handleChange}
               placeholder="Ingrese una descripción"
+            />
+          </div>
+          <div className="mb-4">
+            <TextInput
+              label="Hora"
+              name="date_process"
+              type="datetime-local"
+              value={formData.date_process}
+              onChange={handleChange}
+              placeholder="Seleccione la hora"
+              required
             />
           </div>
           <Button type="submit">Guardar</Button>

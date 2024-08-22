@@ -90,7 +90,7 @@ export const startDeletingPump = (pump) => {
       if (ok) {
         dispatch(onDeleteData());
         dispatch(onActiveData(null));
-        Swal.fire('Success', msg || 'La bomba ha sido eliminada con éxito', 'success');
+        Swal.fire('Éxito', msg || 'La bomba ha sido eliminada con éxito', 'success');
       } else {
         Swal.fire('Error', msg || 'Error al eliminar la bomba', 'error');
       }

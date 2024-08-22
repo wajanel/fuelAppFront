@@ -65,7 +65,7 @@ const FuelTypeFormComponent = () => {
       <Card>
         <Title>Formulario de Tipo de Combustible</Title>
         <form onSubmit={handleSubmit}>
-          <TextInput
+          <TextInput className="mb-4"
             name="name"
             value={formData.name}
             onChange={handleChange}
@@ -73,7 +73,7 @@ const FuelTypeFormComponent = () => {
             label="Nombre"
             required
           />
-          <TextInput
+          <TextInput className="mb-4"
             name="description"
             value={formData.description || ''}
             onChange={handleChange}

@@ -20,42 +20,42 @@ export const NavBarComp = () => {
     };
 
     return (
-        <Navbar bg="dark" data-bs-theme="dark" className="my-3">
+        <Navbar bg="dark" variant="dark" expand="lg" className="mb-3">
             <Container fluid>
                 <Navbar.Brand href="#">
                     <span className="navbar-brand">
-                        
-                        {!isEmptyObject(user) ? <><i className="fas fa-user" />
-                        &nbsp;  {user.name} ({user.role}) </>:
-                                        <button className="btn btn-outline-primary" onClick={handleLogin}>
-                                            <i className="fas fa-sign-out-alt mx-2"></i>
-                                            <span>Ingresar</span>
-                                        </button>
-                        }
+                        {!isEmptyObject(user) ? (
+                            <>
+                                <i className="fas fa-user" />
+                                &nbsp; {user.name} ({user.role})
+                            </>
+                        ) : (
+                            <button className="btn btn-outline-primary" onClick={handleLogin}>
+                                <i className="fas fa-sign-out-alt mx-2"></i>
+                                <span>Ingresar</span>
+                            </button>
+                        )}
                     </span>
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="navbarScroll" />
                 <Navbar.Collapse id="navbarScroll">
-                    <Nav className="me-auto">
+                    <Nav className="me-auto my-2 my-lg-0" navbarScroll>
                         <Nav.Link as={NavLink} to={"/"} className={({ isActive }) => isActive ? 'active' : ''}>
                             Inicio
                         </Nav.Link>
-                        {isEmptyObject(user) ? <>
-                        <Nav.Link as={NavLink} to={"/registro"} className={({ isActive }) => isActive ? 'active' : ''}>
-                            Registro
-                        </Nav.Link>
-                        </>:''}
-                        {user && (user.role === 'usuario' || user.role === 'admin') && (
+                        {isEmptyObject(user) && (
+                            <Nav.Link as={NavLink} to={"/registro"} className={({ isActive }) => isActive ? 'active' : ''}>
+                                Registro
+                            </Nav.Link>
+                        )}
+                        {!isEmptyObject(user) && (user.role === 'usuario' || user.role === 'admin') && (
                             <>
                                 <Nav.Link as={NavLink} to={"/provider"} className={({ isActive }) => isActive ? 'active' : ''}>
                                     Proveedores
                                 </Nav.Link>
                                 <Nav.Link as={NavLink} to={"/purchasefuel"} className={({ isActive }) => isActive ? 'active' : ''}>
                                     Compras
-                                </Nav.Link>
-                                <Nav.Link as={NavLink} to={"/purchasefuelresume"} className={({ isActive }) => isActive ? 'active' : ''}>
-                                    Resumen de Compras
-                                </Nav.Link>
+                                </Nav.Link> 
                                 <Nav.Link as={NavLink} to={"/salefuel"} className={({ isActive }) => isActive ? 'active' : ''}>
                                     Ventas
                                 </Nav.Link>
@@ -64,7 +64,7 @@ export const NavBarComp = () => {
                                 </Nav.Link>
                             </>
                         )}
-                        {user && user.role === 'admin' && (
+                        {!isEmptyObject(user) && user.role === 'admin' && (
                             <NavDropdown title="Configuración" id="basic-nav-dropdown">
                                 <NavDropdown.Item as={NavLink} to={"/incometype"} className={({ isActive }) => isActive ? 'active' : ''}>
                                     Tipo de Ingresos
@@ -99,14 +99,13 @@ export const NavBarComp = () => {
                             </NavDropdown>
                         )}
                     </Nav>
+                    {!isEmptyObject(user) && (
+                        <button className="btn btn-outline-danger my-2 my-lg-0" onClick={handleLogout}>
+                            <i className="fas fa-sign-out-alt mx-2"></i>
+                            <span>Salir</span>
+                        </button>
+                    )}
                 </Navbar.Collapse>
-                {!isEmptyObject(user) ? <>
-                <button className="btn btn-outline-danger" onClick={handleLogout}>
-                    <i className="fas fa-sign-out-alt mx-2"></i>
-                    <span>Salir</span>
-                </button>
-                </> : ''
-                }
             </Container>
         </Navbar>
     );

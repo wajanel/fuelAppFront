@@ -16,6 +16,7 @@ export const uiSlice = createSlice({
     isOpenModalFuelPump: false,
     isOpenModalFuelPrice: false,
     isOpenModalSaleFuel: false,
+    isOpenModalUpdateSaleFuel:false
   },
   reducers: {
     onOpenModalBranch: (state, {payload = false}) => {
@@ -46,7 +47,7 @@ export const uiSlice = createSlice({
       state.isOpenModalPurchaseFuelResume = payload;
     },
     onOpenModalPump: (state, { payload = false }) => {
-      state.isOpenModalFuelPump = payload;
+      state.isOpenModalPump = payload;
     },
     onOpenModalFuelPump: (state, { payload = false }) => {
       state.isOpenModalFuelPump = payload;
@@ -57,10 +58,13 @@ export const uiSlice = createSlice({
     onOpenModalSaleFuel: (state, {payload = false}) => {
       state.isOpenModalSaleFuel = payload;
     },
+    onOpenModalUpdateSaleFuel : (state, {payload = false}) => {
+      state.isOpenModalUpdateSaleFuel = payload
+    }
   },
 });
 
 export const { onOpenModalBranch, onOpenModalUser, onOpenModalIncomeType, onOpenModalIncome, onOpenModalProvider,
   onOpenModalMeasureFuel, onOpenModalFuelType, onOpenModalPurchaseFuel, onOpenModalPurchaseFuelResume, onOpenModalPump, onOpenModalFuelPump,
-  onOpenModalFuelPrice, onOpenModalSaleFuel
+  onOpenModalFuelPrice, onOpenModalSaleFuel, onOpenModalUpdateSaleFuel
  } = uiSlice.actions;

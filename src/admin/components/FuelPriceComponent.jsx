@@ -7,11 +7,15 @@ import { startDeletingFuelPrice, startLoadingFuelPrices } from '../../store/admi
 import { onOpenModalFuelPrice } from '../../store/ui/uiSlice';
 import { useUiStore } from '../../hooks/useUiStore';
 import { convertDBDate } from '../../helpers/convertDBDate';
+import { startLoadingPumps } from '../../store/admin/thunks/pumpThunk';
+import { startLoadingBranches } from '../../store/admin/thunks/branchThunk';
 
 const FuelPriceComponent = () => {
   const dispatch = useDispatch();
   const { data } = useSelector(state => state.fuelPrice);
   const { data:fuelTypeList } = useSelector(state => state.fuelType);
+  const { data:pumpList } = useSelector(state=>state.pump);
+  const { data:branchList } = useSelector(state=> state.branch);
 
   const handleEdit = (id) => {
     const itemToEdit = data.find(item => item.id === id);
@@ -40,6 +44,8 @@ const FuelPriceComponent = () => {
 
   useEffect(() => {
     dispatch(startLoadingFuelPrices());
+    dispatch(startLoadingPumps());
+    dispatch(startLoadingBranches());
   }, []);
 
   return (
@@ -52,18 +58,25 @@ const FuelPriceComponent = () => {
               <TableHeaderCell>Fecha</TableHeaderCell>
               <TableHeaderCell>Precio</TableHeaderCell>
               <TableHeaderCell>Bomba</TableHeaderCell>
+              <TableHeaderCell>Sucursal</TableHeaderCell>
               <TableHeaderCell>Tipo de Combustible</TableHeaderCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.map(item => (
+            {data.map(item => {
+              const pump = pumpList.find(pump => pump.id === item.id_pump);
+              const branch = branchList.find(branch => branch.id === pump.id_branch);
+              const fuelType = fuelTypeList.find(fuelType => fuelType.id === item.id_fuel_type);
+
+              return (
               <TableRow key={`${item.id}`}>
                 <TableCell>{convertDBDate(item.date)}</TableCell>
                 <TableCell>{item.price}</TableCell>
-                <TableCell>{item.id_pump}</TableCell>
-                <TableCell>{fuelTypeList.find( fuelType => fuelType.id === item.id_fuel_type)?.name}</TableCell>
+                <TableCell>{ pump?.name }</TableCell>
+                <TableCell>{ branch?.name }</TableCell>
+                <TableCell>{fuelType?.name}</TableCell>
               </TableRow>
-            ))}
+            )})}
           </TableBody>
         </Table>
         <br />

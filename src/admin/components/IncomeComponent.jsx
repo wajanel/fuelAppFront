@@ -7,6 +7,7 @@ import { onOpenModalIncome } from '../../store/ui/uiSlice';
 import { useUiStore } from '../../hooks/useUiStore';
 import { startLoadingBranches } from '../../store/admin/thunks/branchThunk';
 import { startLoadingIncomeTypes } from '../../store/admin/thunks/incomeTypeThunks';
+import { convertDBDate } from '../../helpers/convertDBDate';
 
 const IncomeComponent = () => {
   const dispatch = useDispatch();
@@ -35,7 +36,7 @@ const IncomeComponent = () => {
       id_income_type: '',
       id_user: '',
       total: '',
-      date_process: '',
+      date_process: convertDBDate(new Date()),
       description: ''
     }));
     openModalIncome();
@@ -71,7 +72,7 @@ const IncomeComponent = () => {
                 <TableCell>{branches.find(branch => branch.id === item.id_branch)?.name}</TableCell>
                 <TableCell>{incomeTypes.find(type => type.id === item.id_income_type)?.name}</TableCell>
                 <TableCell>{item.total}</TableCell>
-                <TableCell>{item.date_process}</TableCell>
+                <TableCell>{convertDBDate( item.date_process )}</TableCell>
                 <TableCell>{item.description}</TableCell>
                 <TableCell>
                   <Button onClick={() => handleEdit(item.id)}>Editar</Button>

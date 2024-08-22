@@ -45,7 +45,10 @@ export const createCommonCompundSlice = (name, initData = [], keys = ['id']) => 
       },
       closeLoading: (state) => {
         state.isLoading = false;
-      }
+      },
+      onResetData: (state) => {
+        state.data = []
+      },
     },
   });
 };

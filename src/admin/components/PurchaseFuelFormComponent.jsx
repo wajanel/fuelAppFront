@@ -101,6 +101,7 @@ const PurchaseFuelFormComponent = () => {
               name="id_branch"
               value={formData.id_branch}
               onChange={(e) => handleSelectChange('id_branch', e)}
+              required
             >
               <SelectItem value="">Seleccione una sucursal</SelectItem>
               {branches.map((branch) => (
@@ -116,6 +117,7 @@ const PurchaseFuelFormComponent = () => {
               name="id_provider"
               value={formData.id_provider}
               onChange={(e) => handleSelectChange('id_provider', e)}
+              required
             >
               <SelectItem value="">Seleccione un proveedor</SelectItem>
               {providers.map((provider) => (
@@ -131,6 +133,7 @@ const PurchaseFuelFormComponent = () => {
               name="id_fuel_type"
               value={formData.id_fuel_type}
               onChange={(e) => handleSelectChange('id_fuel_type', e)}
+              required
             >
               <SelectItem value="">Seleccione un tipo de combustible</SelectItem>
               {fuelTypes.map((fuelType) => (
@@ -166,6 +169,7 @@ const PurchaseFuelFormComponent = () => {
               name="id_measure"
               value={formData.id_measure}
               onChange={(e) => handleSelectChange('id_measure', e)}
+              required
             >
               <SelectItem value="">Seleccione una medida</SelectItem>
               {measureFuels.map((measure) => (

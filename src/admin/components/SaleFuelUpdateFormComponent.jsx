@@ -9,19 +9,15 @@ import { startLoadingLastFuelPrices } from '../../store/admin/thunks/lastFuelPri
 import { startLoadingBranches } from '../../store/admin/thunks/branchThunk';
 import { startLoadingPumpsPerId } from '../../store/admin/thunks/pumpThunk';
 import { startLoadingFuelTypes } from '../../store/admin/thunks/fuelTypeThunk';
-import { onErrorMessage } from '../../store/admin/saleFuelSlice';
-import Swal from 'sweetalert2';
 
 const SaleFuelFormComponent = () => {
-  const { isOpenModalSaleFuel, closeModalSaleFuel } = useUiStore();
+  const { isOpenModalUpdateSaleFuel, closeModalUpdateSaleFuel } = useUiStore();
   const { activeData } = useSelector(state => state.saleFuel);
   const { data:measureFuelList } = useSelector(state=> state.measureFuel);
-  const { data:latestFuelPriceList } = useSelector(state=>state.latestFuelPrice);
-  const { data:fuelPriceList } = useSelector(state=>state.fuelPrice);
+  const { data:latestFuelPriceList } = useSelector(state=>state.fuelPrice);
   const { data:branchesList } = useSelector(state=>state.branch);
   const { data:pumpList} = useSelector(state => state.pump);
   const { data:fuelTypeList } = useSelector(state=> state.fuelType);
-  const { errorMsg } = useSelector(state => state.saleFuel);
   const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
@@ -40,27 +36,19 @@ const SaleFuelFormComponent = () => {
     if (formData.id) {
       dispatch(startUpdatingSaleFuel(formData));
     } else {
-      dispatch(startSavingSaleFuel(formData));
+      dispatch(startSavingSaleFuel({ ...formData, id_user: 1 }));
     }
+    closeModalUpdateSaleFuel(false);
   };
 
   useEffect(() => {
     if (activeData) {
-      setFormData(activeData);
       setFormData(activeData);
       setIdBranch(activeData.id_branch);
       setIdPump(activeData.id_pump);
       setFuelTypeId(activeData.id_fuel_type);
     }
   }, [activeData]);
-
-  useEffect(() => {
-    if(errorMsg){
-      Swal.fire('Error', errorMsg, 'error');
-      dispatch(onErrorMessage(null));
-    }
-  }, [errorMsg])
-  
 
   const customStyles = {
     content: {
@@ -106,8 +94,8 @@ const SaleFuelFormComponent = () => {
 
   return (
     <Modal
-      isOpen={isOpenModalSaleFuel}
-      onRequestClose={closeModalSaleFuel}
+      isOpen={isOpenModalUpdateSaleFuel}
+      onRequestClose={closeModalUpdateSaleFuel}
       style={customStyles}
       contentLabel="Formulario de Venta de Combustible"
       className={'modal'}
@@ -118,8 +106,8 @@ const SaleFuelFormComponent = () => {
         <Title>Seleccione el tipo de combustible</Title>
         <Select 
           value={fuelTypeId}
-          onChange={(e) => setFuelTypeId(e)}
-          disabled= {formData.id!==undefined}
+          key={fuelTypeId}
+          disabled
           >
           {fuelTypeList.map(
             fuelType => <SelectItem key={fuelType.id} value={fuelType.id}>{fuelType.name}</SelectItem>
@@ -127,9 +115,8 @@ const SaleFuelFormComponent = () => {
         </Select>
         <Title>Seleccione la sucursal</Title>
         <Select value={idBranch}
-                onChange={e=>setIdBranch(e)}
                 key={idBranch}
-                disabled= {formData.id!==undefined}
+                disabled
         >
           <SelectItem value=''>Seleccione Sucursal</SelectItem>
           {
@@ -145,9 +132,8 @@ const SaleFuelFormComponent = () => {
             <Select 
             value={idPump} 
             key={idPump}
-            onChange={e=>setIdPump(e)}
-            disabled= {formData.id!==undefined}
-            >
+            disabled
+           >
                 {pumpList.map(
                   pump => <SelectItem key={pump.id} value={pump.id}>{pump.name}</SelectItem>
                 )}
@@ -156,20 +142,18 @@ const SaleFuelFormComponent = () => {
           :''
         }
       </Card>
-      { idBranch !=='' && (latestFuelPriceList.length > 0 || formData.id) ?  <Card>
+      { idBranch !=='' && latestFuelPriceList.length > 0 ?  <Card>
         <Title>{formData.id ? 'Editar Venta de Combustible' : 'Nueva Venta de Combustible'}</Title>
         <form onSubmit={handleSubmit}>
           <Text>Precio del Combustible</Text>
           <Select
             name="id_fuel_price"
             value={formData.id_fuel_price}
-            onChange={e => handleSelectChange('id_fuel_price', e)}
-            disabled= {formData.id!==undefined}
+            disabled
           >
             <SelectItem>Seleccione precio</SelectItem>
             {
-              formData.id ? fuelPriceList.map(price => 
-                <SelectItem value={price.id} key={price.id}>{price.price}</SelectItem>) :latestFuelPriceList.map(price => 
+              latestFuelPriceList.map(price => 
                 <SelectItem value={price.id} key={price.id}>{price.price}</SelectItem>
               )
             }
@@ -180,7 +164,6 @@ const SaleFuelFormComponent = () => {
             type="datetime-local"
             value={formData.time}
             onChange={handleChange}
-            disabled= {formData.id!==undefined}
           />
           <Text>Cantidad</Text>
           <TextInput
@@ -204,7 +187,7 @@ const SaleFuelFormComponent = () => {
           </Select>
           <div className="flex justify-end mt-4">
             <Button type="submit" color="blue">{formData.id ? 'Actualizar' : 'Guardar'}</Button>
-            <Button type="button" color="red" onClick={closeModalSaleFuel}>Cancelar</Button>
+            <Button type="button" color="red" onClick={closeModalUpdateSaleFuel}>Cancelar</Button>
           </div>
         </form>
       </Card>

@@ -1,13 +1,13 @@
 import Swal from "sweetalert2";
 import { backendApi } from "../../../api/backendApi";
-import { closeLoading, onActiveData, onAddNewData, onDeleteData, onLoadingData, onUpdateData, setLoading } from "../saleFuelSlice";
+import { closeLoading, onActiveData, onAddNewData, onDeleteData, onErrorMessage, onLoadingData, onResetData, onUpdateData, setLoading } from "../saleFuelSlice";
 
 export const startLoadingSaleFuels = () => {
   return async (dispatch) => {
     dispatch(setLoading());
     try {
-      const response = await backendApi.get('/sale-fuel');
-      const { ok, listado } = response.data;
+      const response = await backendApi.get('/sale-fuel/listadocompleto');
+      const { ok, listado} = response.data;
       if (ok) {
         dispatch(onLoadingData(listado));
       }
@@ -23,10 +23,21 @@ export const startSavingSaleFuel = (saleFuel) => {
   return async (dispatch) => {
     dispatch(setLoading());
     try {
+      const validate = await backendApi.post('/closing/locate', saleFuel);
+      const { ok:validateok } = validate.data;
+
+      if (!validateok){
+        console.log('Cierre ya realizado, no se pueden agregar ventas');
+        dispatch(onErrorMessage('Cierre ya realizado, no se pueden agregar ventas'));
+        dispatch(closeLoading());
+        return;
+      }
+
       const result = await backendApi.post('/sale-fuel', saleFuel);
       const { ok, msg, id } = result.data;
       if (ok) {
-        dispatch(onAddNewData({ id, ...saleFuel }));
+        //dispatch(onAddNewData({ id, ...saleFuel }));
+        dispatch(onResetData());
         Swal.fire('Éxito', msg || 'La venta de combustible se ha registrado', 'success');
       } else {
         Swal.fire('Error', msg || 'Error al registrar la venta de combustible', 'error');

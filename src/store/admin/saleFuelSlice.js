@@ -9,5 +9,7 @@ export const {
   onLoadingData,
   onDeleteData,
   setLoading,
-  closeLoading
+  closeLoading,
+  onResetData,
+  onErrorMessage
 } = saleFuelSlice.actions;

@@ -1,12 +1,12 @@
 import { useDispatch, useSelector } from "react-redux"
-import { onOpenModalBranch, onOpenModalUser, onOpenModalIncomeType, onOpenModalIncome, onOpenModalProvider, onOpenModalMeasureFuel, onOpenModalFuelType, onOpenModalPurchaseFuel, onOpenModalPurchaseFuelResume, onOpenModalPump, onOpenModalFuelPump, onOpenModalFuelPrice, onOpenModalSaleFuel } from "../store/ui/uiSlice";
+import { onOpenModalBranch, onOpenModalUser, onOpenModalIncomeType, onOpenModalIncome, onOpenModalProvider, onOpenModalMeasureFuel, onOpenModalFuelType, onOpenModalPurchaseFuel, onOpenModalPurchaseFuelResume, onOpenModalPump, onOpenModalFuelPump, onOpenModalFuelPrice, onOpenModalSaleFuel, onOpenModalUpdateSaleFuel } from "../store/ui/uiSlice";
 
 
 export const useUiStore = () => {
   const dispatch = useDispatch();
   const { isOpenModalBranch, isOpenModalUser, isOpenModalIncome, isOpenModalIncomeType, 
     isOpenModalProvider, isOpenModalMeasureFuel, isOpenModalFuelType, isOpenModalPurchaseFuel, isOpenModalPurchaseFuelResume,
-    isOpenModalPump, isOpenModalFuelPump, isOpenModalFuelPrice, isOpenModalSaleFuel } = useSelector(state => state.ui);
+    isOpenModalPump, isOpenModalFuelPump, isOpenModalFuelPrice, isOpenModalSaleFuel, isOpenModalUpdateSaleFuel } = useSelector(state => state.ui);
 
   const openModalBranch = () =>{
     dispatch(onOpenModalBranch(true));
@@ -91,7 +91,7 @@ export const useUiStore = () => {
   };
 
   const openModalFuelPump = () => {
-    dispatch(onOpenModalPump(true));
+    dispatch(onOpenModalFuelPump(true));
   };
 
   const closeModalFuelPump = () => {
@@ -114,6 +114,14 @@ export const useUiStore = () => {
     dispatch(onOpenModalSaleFuel(false));
   };
 
+  const openModalUpdateSaleFuel = () => {
+    dispatch(onOpenModalUpdateSaleFuel(true));
+  }
+
+  const closeModalUpdateSaleFuel = () => {
+    dispatch(onOpenModalUpdateSaleFuel(false));
+  }
+
   return (
     {
         //variables
@@ -130,6 +138,7 @@ export const useUiStore = () => {
         isOpenModalFuelPump,
         isOpenModalFuelPrice,
         isOpenModalSaleFuel,
+        isOpenModalUpdateSaleFuel,
         
         //acciones
         openModalBranch,
@@ -158,6 +167,8 @@ export const useUiStore = () => {
         closeModalFuelPrice,
         openModalSaleFuel,
         closeModalSaleFuel,
+        openModalUpdateSaleFuel,
+        closeModalUpdateSaleFuel
     }
   )
 }

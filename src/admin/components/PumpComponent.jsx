@@ -43,7 +43,7 @@ const PumpComponent = () => {
   useEffect(() => {
     dispatch(startLoadingPumps());
     dispatch(startLoadingStatusPump());
-  }, [dispatch]);
+  }, []);
 
   return (
     <div className="container mx-auto max-w-[80%]">

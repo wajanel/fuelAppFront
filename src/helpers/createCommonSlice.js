@@ -45,6 +45,9 @@ export const createCommonSlice = (name, initData = []) => {
       },
       onResetData: (state) => {
         state.data = []
+      },
+      onErrorMessage: (state, {payload})=>{
+        state.errorMsg = payload;
       }
     },
   });

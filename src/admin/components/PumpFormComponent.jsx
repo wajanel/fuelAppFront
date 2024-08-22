@@ -27,7 +27,7 @@ const PumpFormComponent = () => {
     if (formData.id) {
       dispatch(startUpdatingPump(formData));
     } else {
-      dispatch(startSavingPump({ ...formData, id_user: 1 }));
+      dispatch(startSavingPump(formData));
     }
 
     closeModalPump();
@@ -119,6 +119,7 @@ const PumpFormComponent = () => {
               name="id_status"
               value={formData.id_status}
               onChange={(e) => handleSelectChange(e, 'id_status')}
+              required
             >
               <SelectItem value="">Seleccione un estado</SelectItem>
               {statusData.map((status) => (
@@ -134,6 +135,7 @@ const PumpFormComponent = () => {
               name="id_branch"
               value={formData.id_branch}
               onChange={(e) => handleSelectChange(e, 'id_branch')}
+              required
             >
               <SelectItem value="">Seleccione una sucursal</SelectItem>
               {branchData.map((branch) => (

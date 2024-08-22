@@ -9,13 +9,15 @@ import { startLoadingFuelTypes } from '../../store/admin/thunks/fuelTypeThunk';
 import { startLoadingPumps } from '../../store/admin/thunks/pumpThunk';
 import { startSavingFuelPump, startUpdatingFuelPump } from '../../store/admin/thunks/fuelPumpThunk';
 
+const side = ['A', 'B', 'M'];
+
 const FuelPumpFormComponent = () => {
   const dispatch = useDispatch();
   const { isOpenModalFuelPump, closeModalFuelPump } = useUiStore();
   const { activeData } = useSelector(state => state.fuelPump);
-  const { data:brances } = useSelector( state=> state.branch);
   const { data:pumps } = useSelector( state => state.pump);
   const { data:fueltypes } = useSelector (state => state.fuelType);
+  const { data:branches } = useSelector(state=> state.branch);
 
   const [formData, setFormData] = useState({
     id_fuel_type: '',
@@ -57,13 +59,7 @@ const FuelPumpFormComponent = () => {
 
   const handleSave = () => {
     console.log('handlesave');
-    if (formData.id_fuel_type && formData.id_pump) {
-        console.log('actualizacion pump');
-        dispatch(startUpdatingFuelPump(formData));
-    }else {
-        console.log('nuevo pump');
-        dispatch(startSavingFuelPump(formData));
-      }
+      dispatch(startSavingFuelPump(formData));
     closeModalFuelPump();
   };
 
@@ -85,8 +81,10 @@ const FuelPumpFormComponent = () => {
       onRequestClose={closeModalFuelPump}
       style={customStyles}
       contentLabel="Formulario de Bomba de Combustible"
+      className={'modal'}
+      overlayClassName={'modal-fondo'}
     >
-      <Card>
+      <Card >
         <Title>{formData.id_fuel_type ? 'Editar Bomba de Combustible' : 'Nueva Bomba de Combustible'}</Title>
         <form onSubmit={handleSubmit}>
           <Title>Tipo de Combustible</Title>
@@ -113,18 +111,28 @@ const FuelPumpFormComponent = () => {
             <SelectItem value=''>Seleccione bomba</SelectItem>
             {
                 pumps.map( pump =>
-                    <SelectItem key={pump.id} value={pump.id}>{pump.name}</SelectItem>
+                {
+                  const branch = branches.find(b => b.id === pump.id_branch);
+                  return (<SelectItem key={pump.id} value={pump.id}>{`${pump.name} - ${branch.name}`}</SelectItem>)
+                }
                 )
             }
           </Select>
           <Title>Lado</Title>
-          <TextInput
-            name="side"
+          <Select 
             value={formData.side}
-            onChange={handleChange}
-          />
+            onChange={e => handleSelectChange('side', e)}
+            required
+          >
+            <SelectItem value=''>Seleccione Lado</SelectItem>
+            {
+              side.map( s =>
+                <SelectItem key={s} value={s}>{s}</SelectItem>
+              )
+            }
+          </Select>
           <div className="flex justify-end mt-4">
-            <Button type="submit" color="blue">{formData.id_fuel_type ? 'Actualizar' : 'Guardar'}</Button>
+            <Button type="submit" color="blue">{'Guardar'}</Button>
             <Button color="red" onClick={closeModalFuelPump}>Cancelar</Button>
           </div>
         </form>
