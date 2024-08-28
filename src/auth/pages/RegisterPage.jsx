@@ -6,12 +6,6 @@ import { Card, Button, TextInput, Title } from '@tremor/react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { NavBarComp } from '../../gas/components/NavBarComp';
 
-
-const loginFormFields = {
-    loginUser: '',
-    loginPassword: ''
-};
-
 const registerFormFields = {
     registerUser: '',
     registerName: '',
@@ -21,15 +15,9 @@ const registerFormFields = {
 };
 
 export const RegisterPage = () => {
-    const { loginUser, loginPassword, onInputChange: onLoginInputChange } = useForm(loginFormFields);
     const { registerUser, registerName, registerPassword, registerPassword2, registerCodEmpleado, onInputChange: onRegisterInputChange } = useForm(registerFormFields);
 
-    const { startLogin, startRegister, errorMessage } = useAuthStore();
-
-    const submitLogin = (event) => {
-        event.preventDefault();
-        startLogin({ userName: loginUser, password: loginPassword });
-    };
+    const { startRegister, errorMessage } = useAuthStore();
 
     useEffect(() => {
         if (errorMessage !== undefined) {
@@ -63,6 +51,7 @@ export const RegisterPage = () => {
                               value={registerName}
                               onChange={onRegisterInputChange}
                               className="mb-2"
+                              required
                               />
                           <TextInput
                               type="text"
@@ -71,6 +60,7 @@ export const RegisterPage = () => {
                               value={registerUser}
                               onChange={onRegisterInputChange}
                               className="mb-2"
+                              required
                               />
                           <TextInput
                               type="text"
@@ -87,6 +77,7 @@ export const RegisterPage = () => {
                               value={registerPassword}
                               onChange={onRegisterInputChange}
                               className="mb-2"
+                              required
                               />
                           <TextInput
                               type="password"
@@ -95,6 +86,7 @@ export const RegisterPage = () => {
                               value={registerPassword2}
                               onChange={onRegisterInputChange}
                               className="mb-2"
+                              required
                               />
                           <Button type="submit" color="blue" className="mt-3">
                               Crear cuenta
