@@ -9,6 +9,7 @@ import { useUiStore } from '../../hooks/useUiStore';
 import { convertDBDate } from '../../helpers/convertDBDate';
 import { startLoadingPumps } from '../../store/admin/thunks/pumpThunk';
 import { startLoadingBranches } from '../../store/admin/thunks/branchThunk';
+import { startLoadingFuelTypes } from '../../store/admin/thunks/fuelTypeThunk';
 
 const FuelPriceComponent = () => {
   const dispatch = useDispatch();
@@ -46,6 +47,7 @@ const FuelPriceComponent = () => {
     dispatch(startLoadingFuelPrices());
     dispatch(startLoadingPumps());
     dispatch(startLoadingBranches());
+    dispatch(startLoadingFuelTypes());
   }, []);
 
   return (
@@ -65,7 +67,7 @@ const FuelPriceComponent = () => {
           <TableBody>
             {data.map(item => {
               const pump = pumpList.find(pump => pump.id === item.id_pump);
-              const branch = branchList.find(branch => branch.id === pump.id_branch);
+              const branch = branchList.find(branch => branch.id === pump?.id_branch);
               const fuelType = fuelTypeList.find(fuelType => fuelType.id === item.id_fuel_type);
 
               return (

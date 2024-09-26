@@ -77,6 +77,7 @@ export const RegisterPage = () => {
                               value={registerPassword}
                               onChange={onRegisterInputChange}
                               className="mb-2"
+                              minLength={6}
                               required
                               />
                           <TextInput
@@ -86,6 +87,7 @@ export const RegisterPage = () => {
                               value={registerPassword2}
                               onChange={onRegisterInputChange}
                               className="mb-2"
+                              minLength={6}
                               required
                               />
                           <Button type="submit" color="blue" className="mt-3">

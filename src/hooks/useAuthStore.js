@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux"
 import { clearErrorMessage, onChecking, onLogin, onLogout } from "../store";
 import { backendApi } from "../api/backendApi";
+import Swal from 'sweetalert2';
 
 
 export const useAuthStore = ()=>{
@@ -32,7 +33,9 @@ export const useAuthStore = ()=>{
         console.log({name, userName, password, password2, codEmpleado});
         try {
             const {data} = await backendApi.post('/auth/new', {name, user_name:userName, password,cod_employee:codEmpleado,status_id:2,role:'admin'});
-            dispatch(onLogin({name:data.name, uid:data.uid,role:data.role}))
+            dispatch(onLogout())
+            Swal.fire('Se creó la cuenta correctamente, comuniquese con el admin para ser activa')
+            
         } catch (error) {
             console.log(error.response.data?.msg);
             dispatch(onLogout(error.response.data?.msg || 'Error al crear el usuario'));
