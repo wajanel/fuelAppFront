@@ -1,0 +1,39 @@
+name: Build and Deploy
+'on':
+  push:
+    branches:
+      - main
+
+permissions:
+      id-token: write   # This is required for requesting the JWT
+      contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        run: npm install
+      - name: Run ESLint
+        run: npm run lint
+      - name: Run unit tests
+        run: npm test
+      - name: Inject backend URL and build
+        run: |
+          echo "VITE_URL_BACKEND=${{ secrets.BACKEND_URL }}" > .env
+          npm run build
+      - name: Connect to AWS
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-session-name: awssyncsession
+          role-to-assume: ${{ secrets.AWS_IAM_ROLE }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: sync bucket
+        run: aws s3 sync ./dist/ s3://${{ secrets.AWS_BUCKET_NAME }} --delete
