@@ -20,7 +20,7 @@ export const HomePage = () => {
                             alt="First slide"
                         />
                         <Carousel.Caption>
-                            <h3>Sucursal 1</h3>
+                            <h3>Sucursal 15</h3>
                             <p>Ciudad Guatemala</p>
                         </Carousel.Caption>
                     </Carousel.Item>
@@ -31,7 +31,7 @@ export const HomePage = () => {
                             alt="Second slide"
                         />
                         <Carousel.Caption>
-                            <h3>Sucursal 2</h3>
+                            <h3>Sucursal 16</h3>
                             <p>Villa Nueva</p>
                         </Carousel.Caption>
                     </Carousel.Item>
@@ -42,7 +42,7 @@ export const HomePage = () => {
                             alt="Third slide"
                         />
                         <Carousel.Caption>
-                            <h3>Sucursal 3</h3>
+                            <h3>Sucursal 16</h3>
                             <p>Escuintla</p>
                         </Carousel.Caption>
                     </Carousel.Item>
