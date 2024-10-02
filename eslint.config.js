@@ -9,6 +9,6 @@ export default [
   pluginJs.configs.recommended,
   pluginReact.configs.flat.recommended,
   {
-    ignores: ['dist/', 'tailwind.config.js'],  // Use "ignores" instead of "ignorePatterns"
+    ignores: ['dist/', 'tailwind.config.js', 'tests/', 'jest.setup.js', 'styleMock.js'],  // Use "ignores" instead of "ignorePatterns"
   }
 ];

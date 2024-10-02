@@ -39,6 +39,8 @@ export const useAuthStore = ()=>{
             Swal.fire('Se creó la cuenta correctamente, comuniquese con el admin para ser activa')
             
         } catch (error) {
+            console.log(error);
+            
             console.log(error.response.data?.msg);
             dispatch(onLogout(error.response.data?.msg || 'Error al crear el usuario'));
             setTimeout(()=>{
