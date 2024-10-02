@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Card, Title, TextInput, Button, Select, SelectItem } from '@tremor/react';
+import { Card, Title, Button, Select, SelectItem } from '@tremor/react';
 import Modal from 'react-modal';
-import { onAddNewData, onUpdateData, onActiveData } from '../../store/admin/fuelPumpSlice';
 import { useUiStore } from '../../hooks/useUiStore';
 import { startLoadingBranches } from '../../store/admin/thunks/branchThunk';
 import { startLoadingFuelTypes } from '../../store/admin/thunks/fuelTypeThunk';
 import { startLoadingPumps } from '../../store/admin/thunks/pumpThunk';
-import { startSavingFuelPump, startUpdatingFuelPump } from '../../store/admin/thunks/fuelPumpThunk';
+import { startSavingFuelPump } from '../../store/admin/thunks/fuelPumpThunk';
 
 const side = ['A', 'B', 'M'];
 
@@ -43,14 +42,6 @@ const FuelPumpFormComponent = () => {
   };
 
   Modal.setAppElement('#root');
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
 
   const handleSelectChange = (name, value) => {
     console.log({name, value});

@@ -1,7 +1,7 @@
 // store/thunks/fuelPumpThunk.js
 import Swal from "sweetalert2";
 import { backendApi } from "../../../api/backendApi";
-import { closeLoading, onActiveData, onAddNewData, onDeleteData, onLoadingData, onResetData, onUpdateData, setLoading } from "../fuelPumpSlice";
+import { closeLoading, onActiveData, onDeleteData, onLoadingData, onResetData, onUpdateData, setLoading } from "../fuelPumpSlice";
 
 export const startLoadingFuelPumps = () => {
   return async (dispatch) => {

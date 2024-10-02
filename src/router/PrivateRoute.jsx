@@ -1,3 +1,5 @@
+import React from 'react';
+import PropTypes from 'prop-types';
 import { useSelector } from "react-redux"
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -23,3 +25,7 @@ export const PrivateRoute = ({roles = []}) => {
     console.log('outlet');
     return <Outlet />
 }
+
+PrivateRoute.propTypes = {
+    roles: PropTypes.arrayOf(PropTypes.string) // assuming roles is an array of strings
+};

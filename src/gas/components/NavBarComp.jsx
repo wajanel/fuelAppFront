@@ -1,12 +1,17 @@
+import React from 'react';
 import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 import { NavLink, useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 import { useAuthStore } from "../../hooks";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 function isEmptyObject(obj) {
     return Object.keys(obj).length === 0 && obj.constructor === Object;
 }
 
 export const NavBarComp = () => {
+
+    const { t } = useTranslation();
     const { startLogout, user } = useAuthStore();
     const navigate = useNavigate();
 
@@ -32,7 +37,7 @@ export const NavBarComp = () => {
                         ) : (
                             <button className="btn btn-outline-primary" onClick={handleLogin}>
                                 <i className="fas fa-sign-out-alt mx-2"></i>
-                                <span>Ingresar</span>
+                                <span>{t('msg_ingresar')}</span>
                             </button>
                         )}
                     </span>
@@ -41,7 +46,7 @@ export const NavBarComp = () => {
                 <Navbar.Collapse id="navbarScroll">
                     <Nav className="me-auto my-2 my-lg-0" navbarScroll>
                         <Nav.Link as={NavLink} to={"/"} className={({ isActive }) => isActive ? 'active' : ''}>
-                            Inicio
+                            {t('msg_inicio')}
                         </Nav.Link>
                         {isEmptyObject(user) && (
                             <Nav.Link as={NavLink} to={"/registro"} className={({ isActive }) => isActive ? 'active' : ''}>
@@ -99,8 +104,9 @@ export const NavBarComp = () => {
                             </NavDropdown>
                         )}
                     </Nav>
+                    <LanguageSwitcher/>  {/* Se añade algo de espacio a la izquierda */}
                     {!isEmptyObject(user) && (
-                        <button className="btn btn-outline-danger my-2 my-lg-0" onClick={handleLogout}>
+                        <button className="btn btn-outline-danger my-2 my-lg-0 ms-2" onClick={handleLogout}>
                             <i className="fas fa-sign-out-alt mx-2"></i>
                             <span>Salir</span>
                         </button>

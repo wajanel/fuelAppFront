@@ -4,7 +4,7 @@ import { closeLoading, onAddNewData, onLoadingData, onUpdateData, setLoading } f
 
 
 export const startLoadingUsers = ()=>{
-    return async (dispatch, getState) => {
+    return async (dispatch) => {
         dispatch(setLoading());
         try {
             const response = await backendApi.get('/auth/users')
@@ -23,7 +23,7 @@ export const startLoadingUsers = ()=>{
 }
 
 export const startUpdatingUsers = (user)=>{
-    return async(dispatch, getState) => {
+    return async(dispatch) => {
         dispatch(setLoading());
         try {
             const result = await backendApi.put(`/auth/user/${user.id}`, user);

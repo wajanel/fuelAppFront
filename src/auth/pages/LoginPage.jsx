@@ -12,19 +12,10 @@ const loginFormFields = {
     loginPassword: ''
 };
 
-const registerFormFields = {
-    registerUser: '',
-    registerName: '',
-    registerPassword: '',
-    registerPassword2: '',
-    registerCodEmpleado:''
-};
-
 export const LoginPage = () => {
     const { loginUser, loginPassword, onInputChange: onLoginInputChange } = useForm(loginFormFields);
-    const { registerUser, registerName, registerPassword, registerPassword2, registerCodEmpleado, onInputChange: onRegisterInputChange } = useForm(registerFormFields);
-
-    const { startLogin, startRegister, errorMessage } = useAuthStore();
+    
+    const { startLogin, errorMessage } = useAuthStore();
 
     const submitLogin = (event) => {
         event.preventDefault();
@@ -36,16 +27,6 @@ export const LoginPage = () => {
             Swal.fire('Error autenticación', errorMessage, 'error');
         }
     }, [errorMessage]);
-
-    const submitRegister = (event) => {
-        event.preventDefault();
-
-        if (registerPassword !== registerPassword2) {
-            Swal.fire('Error creación usuario', 'No coinciden las contraseñas', 'error');
-            return;
-        }
-        startRegister({ userName: registerUser, name: registerName, password: registerPassword, password2: registerPassword2, codEmpleado:registerCodEmpleado });
-    };
 
     return (
         <>

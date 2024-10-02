@@ -1,6 +1,6 @@
 import Swal from "sweetalert2";
 import { backendApi } from "../../../api/backendApi";
-import { closeLoading, onActiveData, onAddNewData, onDeleteData, onErrorMessage, onLoadingData, onResetData, onUpdateData, setLoading } from "../saleFuelSlice";
+import { closeLoading, onActiveData, onDeleteData, onErrorMessage, onLoadingData, onResetData, onUpdateData, setLoading } from "../saleFuelSlice";
 
 export const startLoadingSaleFuels = () => {
   return async (dispatch) => {
@@ -34,7 +34,7 @@ export const startSavingSaleFuel = (saleFuel) => {
       }
 
       const result = await backendApi.post('/sale-fuel', saleFuel);
-      const { ok, msg, id } = result.data;
+      const { ok, msg } = result.data;
       if (ok) {
         //dispatch(onAddNewData({ id, ...saleFuel }));
         dispatch(onResetData());

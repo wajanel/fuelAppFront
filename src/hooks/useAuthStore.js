@@ -33,6 +33,8 @@ export const useAuthStore = ()=>{
         console.log({name, userName, password, password2, codEmpleado});
         try {
             const {data} = await backendApi.post('/auth/new', {name, user_name:userName, password,cod_employee:codEmpleado,status_id:2,role:'admin'});
+            console.log(data);
+            
             dispatch(onLogout())
             Swal.fire('Se creó la cuenta correctamente, comuniquese con el admin para ser activa')
             
@@ -68,8 +70,9 @@ export const useAuthStore = ()=>{
     }
      
      const startLogout = () =>{
-         
+        const lng = localStorage.getItem('language') || 'es';
         localStorage.clear();
+        localStorage.setItem('language', lng);
         dispatch (onLogout ());
      }
 

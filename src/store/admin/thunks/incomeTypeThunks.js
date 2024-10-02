@@ -3,7 +3,7 @@ import { backendApi } from "../../../api/backendApi";
 import { closeLoading, onActiveData, onAddNewData, onDeleteData, onLoadingData, onUpdateData, setLoading } from "../incomeTypeSlice";
 
 export const startLoadingIncomeTypes = () => {
-    return async (dispatch, getState) => {
+    return async (dispatch) => {
         dispatch(setLoading());
         try {
             const response = await backendApi.get('/income-type');
@@ -40,7 +40,7 @@ export const startSavingIncomeType = (incomeType) => {
 };
 
 export const startUpdatingIncomeType = (incomeType) => {
-    return async (dispatch, getState) => {
+    return async (dispatch) => {
         dispatch(setLoading());
         try {
             const result = await backendApi.put(`/income-type/${incomeType.id}`, incomeType);
@@ -60,7 +60,7 @@ export const startUpdatingIncomeType = (incomeType) => {
 };
 
 export const startDeletingIncomeType = (incomeType) => {
-    return async (dispatch, getState) => {
+    return async (dispatch) => {
         dispatch(setLoading());
         try {
             const result = await backendApi.delete(`/income-type/${incomeType.id}`);

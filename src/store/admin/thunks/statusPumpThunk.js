@@ -4,7 +4,7 @@ import { closeLoading, onLoadingData, setLoading } from "../statusPumpSlice"
 
 
 export const startLoadingStatusPump = ()=>{
-    return async (dispatch, getState) => {
+    return async (dispatch) => {
         dispatch(setLoading());
         try {
             const response = await backendApi.get('/pump/status/pump')

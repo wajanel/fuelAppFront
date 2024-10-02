@@ -3,7 +3,7 @@ import { backendApi } from "../../../api/backendApi";
 import { closeLoading, onActiveData, onAddNewData, onDeleteData, onLoadingData, onUpdateData, setLoading } from "../incomeSlice";
 
 export const startLoadingIncomes = () => {
-    return async (dispatch, getState) => {
+    return async (dispatch) => {
         dispatch(setLoading());
         try {
             const response = await backendApi.get('/income');
@@ -42,7 +42,7 @@ export const startSavingIncome = (income) => {
 };
 
 export const startUpdatingIncome = (income) => {
-    return async (dispatch, getState) => {
+    return async (dispatch) => {
         console.log('start updating incomes');
         dispatch(setLoading());
         try {
@@ -64,7 +64,7 @@ export const startUpdatingIncome = (income) => {
 };
 
 export const startDeletingIncome = (income) => {
-    return async (dispatch, getState) => {
+    return async (dispatch) => {
         dispatch(setLoading());
         try {
             const result = await backendApi.delete(`/income/${income.id}`);

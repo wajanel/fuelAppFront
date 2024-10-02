@@ -1,10 +1,9 @@
 // components/FuelPriceComponent.js
 import React, { useEffect } from 'react';
-import { Card, Title, Table, TableHead, TableRow, TableHeaderCell, TableBody, TableCell, Button } from '@tremor/react';
+import { Card, Title, Table, TableHead, TableRow, TableHeaderCell, TableBody, TableCell } from '@tremor/react';
 import { useDispatch, useSelector } from 'react-redux';
-import { onActiveData, setLoading } from '../../store/admin/fuelPriceSlice';
-import { startDeletingFuelPrice, startLoadingFuelPrices } from '../../store/admin/thunks/fuelPriceThunk';
-import { onOpenModalFuelPrice } from '../../store/ui/uiSlice';
+import { onActiveData } from '../../store/admin/fuelPriceSlice';
+import { startLoadingFuelPrices } from '../../store/admin/thunks/fuelPriceThunk';
 import { useUiStore } from '../../hooks/useUiStore';
 import { convertDBDate } from '../../helpers/convertDBDate';
 import { startLoadingPumps } from '../../store/admin/thunks/pumpThunk';
@@ -17,19 +16,6 @@ const FuelPriceComponent = () => {
   const { data:fuelTypeList } = useSelector(state => state.fuelType);
   const { data:pumpList } = useSelector(state=>state.pump);
   const { data:branchList } = useSelector(state=> state.branch);
-
-  const handleEdit = (id) => {
-    const itemToEdit = data.find(item => item.id === id);
-    dispatch(onActiveData(itemToEdit));
-    dispatch(setLoading());
-    dispatch(onOpenModalFuelPrice(true));
-  };
-
-  const handleDelete = (id) => {
-    const itemToDelete = data.find(item => item.id === id);
-    dispatch(onActiveData(itemToDelete));
-    dispatch(startDeletingFuelPrice(itemToDelete));
-  };
 
   const { openModalFuelPrice } = useUiStore();
 

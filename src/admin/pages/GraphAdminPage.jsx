@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Card, Title, LineChart } from "@tremor/react";
 import { useDispatch, useSelector } from 'react-redux';
 import { startLoadingDailyClosing } from '../../store/admin/thunks/closingDaily';

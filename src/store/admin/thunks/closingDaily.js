@@ -4,7 +4,7 @@ import { closeLoading, onLoadingData, setLoading } from "../dailyClosingSlice"
 
 
 export const startLoadingDailyClosing = ()=>{
-    return async (dispatch, getState) => {
+    return async (dispatch) => {
         dispatch(setLoading());
         try {
             const response = await backendApi.get('/closing')

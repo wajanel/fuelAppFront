@@ -4,7 +4,7 @@ import { closeLoading, onLoadingData, setLoading } from "../statusBranchSlice"
 
 
 export const startLoadingStatusBranches = ()=>{
-    return async (dispatch, getState) => {
+    return async (dispatch) => {
         dispatch(setLoading());
         try {
             const response = await backendApi.get('/branch/statusbranch')

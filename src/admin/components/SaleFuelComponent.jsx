@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Title, Table, TableHead, TableRow, TableHeaderCell, TableBody, TableCell, Button, TextInput, Select, SelectItem } from '@tremor/react';
+import { Card, Title, Table, TableHead, TableRow, TableHeaderCell, TableBody, TableCell, Button, TextInput } from '@tremor/react';
 import { useDispatch, useSelector } from 'react-redux';
 import { onActiveData, onResetData, setLoading } from '../../store/admin/saleFuelSlice';
 import { startDeletingSaleFuel, startLoadingSaleFuels } from '../../store/admin/thunks/saleFuelThunk';

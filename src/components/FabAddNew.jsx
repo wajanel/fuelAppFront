@@ -1,10 +1,11 @@
+import React from 'react';
+import { useUiStore } from '../hooks';
+
 export const FabAddNew = () => {
 
     const {onOpenModalBranch} = useUiStore();
 
     const handleClickNew = ()=>{
-        setActiveData({
-        })
         onOpenModalBranch();
     }
 

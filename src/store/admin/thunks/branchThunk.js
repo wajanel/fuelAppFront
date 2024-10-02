@@ -4,7 +4,7 @@ import { closeLoading, onActiveData, onAddNewData, onDeleteData, onLoadingData, 
 
 
 export const startLoadingBranches = ()=>{
-    return async (dispatch, getState) => {
+    return async (dispatch) => {
         dispatch(setLoading());
         try {
             const response = await backendApi.get('/branch')
@@ -23,7 +23,7 @@ export const startLoadingBranches = ()=>{
 }
 
 export const startUpdatingBranches = (branch)=>{
-    return async(dispatch, getState) => {
+    return async(dispatch) => {
         dispatch(setLoading());
         try {
             const result = await backendApi.put(`/branch/${branch.id}`, branch);
@@ -44,7 +44,7 @@ export const startUpdatingBranches = (branch)=>{
 }
 
 export const startDeletingBranch = (branch) =>{
-    return async (dispatch, getState) => {
+    return async (dispatch) => {
         dispatch(setLoading());
 
         try {
