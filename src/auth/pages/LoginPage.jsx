@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import { Card, Button, TextInput, Title } from '@tremor/react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { NavBarComp } from '../../gas/components/NavBarComp';
+import { useTranslation } from 'react-i18next';
 
 
 const loginFormFields = {
@@ -13,6 +14,9 @@ const loginFormFields = {
 };
 
 export const LoginPage = () => {
+
+    const { t } = useTranslation();
+
     const { loginUser, loginPassword, onInputChange: onLoginInputChange } = useForm(loginFormFields);
     
     const { startLogin, errorMessage } = useAuthStore();
@@ -35,11 +39,11 @@ export const LoginPage = () => {
             <Row className="justify-content-center">
                 <Col xs={6}>
                     <Card>
-                    <Title >Ingreso</Title>
+                    <Title >{t('msg_ingresar')}</Title>
                       <form onSubmit={submitLogin}>
                           <TextInput
                               type="text"
-                              placeholder="Usuario"
+                              placeholder={t('msg_usuario')}
                               name="loginUser"
                               value={loginUser}
                               onChange={onLoginInputChange}
@@ -47,7 +51,7 @@ export const LoginPage = () => {
                               />
                           <TextInput
                               type="password"
-                              placeholder="Contraseña"
+                              placeholder={t('msg_contrasena')}
                               name="loginPassword"
                               value={loginPassword}
                               onChange={onLoginInputChange}
